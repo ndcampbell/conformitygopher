@@ -1,8 +1,8 @@
-# Conformity Gopher
+# ConformityGopher
 
 A tool for generating reports on AWS conformity.
 
-Conformity Gopher will look for specific tags or naming conventions in AWS resources and generate a report of resources that are not compliant.
+ConformityGopher will look for specific tags or naming conventions in AWS resources and generate a report of resources that are not compliant.
 
 Could be expanded to include other conformity rules for keeping AWS resources uniform. 
 
@@ -19,7 +19,7 @@ Example:
 
 # Running
 
-`go run main.go`
+`go run conformitygopher/main.go`
 
 # To Do
 - Add AWS resources (Start: EC2, ELBs, S3, RDS)

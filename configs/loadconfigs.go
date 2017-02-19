@@ -2,25 +2,27 @@ package configs
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
-	"os"
+	"log"
 )
 
-type jsonConfig struct {
+type ConformityConfig struct {
 	Resources []string
 	Profiles  []string
 }
 
-func LoadConfigs() {
-	var config jsonConfig
+func LoadConfigs() *ConformityConfig {
 
-	file, err := ioutil.ReadFile("./conformitygopher.json")
+	var config ConformityConfig
+	configpath := "./conformitygopher.json"
+
+	file, err := ioutil.ReadFile(configpath)
 	if err != nil {
-		fmt.Println("Error reading config", err)
-		os.Exit(1)
+		log.Fatal("Error reading config", err)
 	}
 
 	json.Unmarshal(file, &config)
-	fmt.Printf("%v\n", config)
+	log.Printf("Config Loaded: %s", configpath)
+
+	return &config
 }
