@@ -2,6 +2,7 @@ package aws
 
 import (
 	"log"
+	"sync"
 
 	"github.com/ndcampbell/conformitygopher/configs"
 
@@ -22,9 +23,17 @@ func setupSession(profile string) *session.Session {
 }
 
 func RunAll(config *configs.ConformityConfig) {
+	var wg sync.WaitGroup
 	for _, profile := range config.Profiles {
 		log.Printf("Gathering for profile: %s", profile)
 		sess := setupSession(profile)
-		Ec2Gather(sess)
+
+		//Gather each resource in a goroutine, wait for all to complete before changing profiles
+		wg.Add(1)
+		go Ec2Gather(sess, &wg)
+		wg.Add(1)
+		go RdsGather(sess, &wg)
+
+		wg.Wait()
 	}
 }
