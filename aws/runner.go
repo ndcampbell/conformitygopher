@@ -32,12 +32,11 @@ func RunAll(config *configs.ConformityConfig) {
 		log.Printf("Gathering for profile: %s", profile)
 		sess := setupSession(profile)
 
-		//Gather each resource in a goroutine, wait for all to complete before changing profiles
-		wg.Add(1)
-		go Ec2Gather(sess, &wg)
-		wg.Add(1)
-		go RdsGather(sess, &wg)
-
+        for _, resource := range config.Resources {
+            resourceFunc := ResourceMap[resource]
+            wg.Add(1)
+            go resourceFunc(sess, &wg)
+        }
 		wg.Wait()
 	}
 }
