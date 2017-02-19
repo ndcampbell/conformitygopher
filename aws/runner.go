@@ -5,6 +5,7 @@ import (
 	"sync"
 
 	"github.com/ndcampbell/conformitygopher/configs"
+	"github.com/ndcampbell/conformitygopher/database"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -24,6 +25,9 @@ func setupSession(profile string) *session.Session {
 
 func RunAll(config *configs.ConformityConfig) {
 	var wg sync.WaitGroup
+
+    database.DbSetup(config)
+
 	for _, profile := range config.Profiles {
 		log.Printf("Gathering for profile: %s", profile)
 		sess := setupSession(profile)

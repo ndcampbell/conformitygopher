@@ -6,26 +6,32 @@ ConformityGopher will look for specific tags or naming conventions in AWS resour
 
 Could be expanded to include other conformity rules for keeping AWS resources uniform. 
 
-# Config
+## Config
 
 Location: `./conformitygopher.json`
 Example:
-    ```{
+
+    {
         "resources": ["ec2", "s3" ],
         "profiles": ["sandbox", "dev"],
-        "requiredTags": [ "Group", "App" ],
-        "reportEmail": [ "example@example.com", "admin@example.com"]
-       }```
+        "db": {
+            "type": "in-memory",
+            "location": "./conformitygopher.db"
+        }
+    }
 
-# Running
+## Running
 
 `go run conformitygopher/main.go`
 
-# To Do
-- Add AWS resources (Start: EC2, ELBs, S3, RDS)
-- Add notifications (Start: Email, Slack)
-- Decide how this runs (does it watch a schedule or just a one time command?)
-- Added in-memory database (Bolt)
+## Database
 
+Currently uses Bolt in-memory database: https://github.com/boltdb/bolt
+This provides an in-memory key-value store for generating the reports.
 
+Would like to add redis support in the future
 
+## Dependencies
+
+- AWS SDK: https://github.com/aws/aws-sdk-go
+- Bolt: https://github.com/boltdb/bolt

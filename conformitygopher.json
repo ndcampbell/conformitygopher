@@ -1,4 +1,8 @@
 {
 "resources": ["ec2", "s3" ],
-"profiles": ["sandbox", "dev"]
+"profiles": ["sandbox", "dev"],
+"db": {
+    "type": "in-memory",
+    "location": "./conformitygopher.db"
+    }
 }

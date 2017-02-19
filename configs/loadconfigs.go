@@ -9,6 +9,12 @@ import (
 type ConformityConfig struct {
 	Resources []string
 	Profiles  []string
+    Db DbConfig
+}
+
+type DbConfig struct {
+    Type string
+    Location string
 }
 
 func LoadConfigs() *ConformityConfig {
