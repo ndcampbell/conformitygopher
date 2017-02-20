@@ -1,8 +1,11 @@
 {
 "resources": ["ec2", "rds" ],
-"profiles": ["sandbox", "dev"],
+"profiles": ["sandbox"],
 "db": {
     "type": "in-memory",
     "location": "./conformitygopher.db"
+    },
+"rules": {
+    "required_tags": ["group"]
     }
 }
