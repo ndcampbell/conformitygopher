@@ -9,6 +9,6 @@ import (
 
 func main() {
 	log.Println("Starting ConformityGopher!")
-	config := configs.LoadConfigs()
-	aws.RunAll(config)
+	configs.LoadConfigs()
+	aws.RunAll()
 }

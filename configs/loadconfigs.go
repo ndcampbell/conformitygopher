@@ -6,26 +6,27 @@ import (
 	"log"
 )
 
-type ConformityConfig struct {
+type BaseConfig struct {
 	Resources []string
 	Profiles  []string
-    Db        DbConfig
-    Rules     RulesConfig
+	Db        DbConfig
+	Rules     RulesConfig
 }
 
 type DbConfig struct {
-    Type string
-    Location string
+	Type     string
+	Location string
 }
 
 type RulesConfig struct {
-    RequiredTags []string `json:"required_tags"`
+	RequiredTags []string `json:"required_tags"`
 }
 
-func LoadConfigs() *ConformityConfig {
+var Config BaseConfig
 
-	var config ConformityConfig
-    setConfigDefaults(&config)
+func LoadConfigs() {
+
+	setConfigDefaults(&Config)
 
 	configpath := "./conformitygopher.json"
 
@@ -34,19 +35,17 @@ func LoadConfigs() *ConformityConfig {
 		log.Fatal("Error reading config: ", err)
 	}
 
-	err = json.Unmarshal(file, &config)
+	err = json.Unmarshal(file, &Config)
 	if err != nil {
 		log.Fatal("Error with config json: ", err)
 	}
 	log.Printf("Config Loaded: %s", configpath)
-
-	return &config
 }
 
 //Sets default values for config. Loading from Json will override these defaults
-func setConfigDefaults(config *ConformityConfig) {
-    config.Profiles = append(config.Profiles, "default")
-    config.Resources = append(config.Resources, "ec2")
-    config.Db.Type = "in-memory"
-    config.Db.Location = "./conformitygopher.db"
+func setConfigDefaults(config *BaseConfig) {
+	config.Profiles = append(config.Profiles, "default")
+	config.Resources = append(config.Resources, "ec2")
+	config.Db.Type = "in-memory"
+	config.Db.Location = "./conformitygopher.db"
 }
