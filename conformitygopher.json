@@ -1,5 +1,5 @@
 {
-"resources": ["ec2", "rds" ],
+"resources": ["ec2"],
 "profiles": ["sandbox"],
 "db": {
     "type": "in-memory",

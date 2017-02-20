@@ -31,12 +31,14 @@ func LoadConfigs() *ConformityConfig {
 
 	file, err := ioutil.ReadFile(configpath)
 	if err != nil {
-		log.Fatal("Error reading config", err)
+		log.Fatal("Error reading config: ", err)
 	}
 
-	json.Unmarshal(file, &config)
+	err = json.Unmarshal(file, &config)
+	if err != nil {
+		log.Fatal("Error with config json: ", err)
+	}
 	log.Printf("Config Loaded: %s", configpath)
-    log.Println(config)
 
 	return &config
 }
