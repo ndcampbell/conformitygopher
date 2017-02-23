@@ -17,8 +17,17 @@ Example:
         "db": {
             "type": "in-memory",
             "location": "./conformitygopher.db"
+        },
+        "rules": {
+            ...
         }
     }
+
+## Rules
+
+- `"required_tags": ["tag1", "tag2"]` - Validates that taggable resources have all required tags. Reports on resources missing tags.
+- `"empty_elb": true` - repots on any ELB that has no registered instances
+- Many more to come, open to any ideas
 
 ## Running
 
