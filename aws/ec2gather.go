@@ -18,7 +18,7 @@ type InstanceData struct {
 	BrokenRule string
 }
 
-func Ec2Gather(sess *session.Session, wg *sync.WaitGroup) {
+func Ec2Gather(sess *session.Session, wg *sync.WaitGroup) []*InstanceData {
 	defer wg.Done()
 
 	ec2client := ec2.New(sess)
@@ -27,11 +27,11 @@ func Ec2Gather(sess *session.Session, wg *sync.WaitGroup) {
 		log.Fatal("EC2 Error", err)
 	}
 	log.Println("EC2 Resources Gathered")
-	iterateInstances(resp.Reservations)
-
+	badInstances := iterateInstances(resp.Reservations)
+	return badInstances
 }
 
-func iterateInstances(reservations []*ec2.Reservation) {
+func iterateInstances(reservations []*ec2.Reservation) []*InstanceData {
 	var badInstances []*InstanceData
 	for _, res := range reservations {
 		for _, instance := range res.Instances {
@@ -41,6 +41,7 @@ func iterateInstances(reservations []*ec2.Reservation) {
 			}
 		}
 	}
+	return badInstances
 }
 
 func checkRules(instance *ec2.Instance) *InstanceData {
@@ -48,7 +49,6 @@ func checkRules(instance *ec2.Instance) *InstanceData {
 	tagRule := checkTags(instance.Tags)
 	if tagRule == false {
 		instanceData = buildInstanceData(instance, "Missing Required Tags")
-		log.Println(instanceData)
 		return &instanceData
 	}
 	return nil
