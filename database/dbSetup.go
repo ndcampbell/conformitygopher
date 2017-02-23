@@ -8,7 +8,8 @@ import (
 
 func DbSetup(config *configs.DbConfig) {
 	if config.Type == "in-memory" {
-		BoltSetup(config.Location)
+		db := BoltStruct{}
+		db.BoltSetup(config.Location)
 		log.Println("Bolt DB Setup")
 	}
 
