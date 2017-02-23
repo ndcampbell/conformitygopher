@@ -23,18 +23,18 @@ func setupSession(profile string) *session.Session {
 	return sess
 }
 
-func RunAll() {
+func RunAll(config *configs.BaseConfig) {
 	var wg sync.WaitGroup
 
-	database.DbSetup()
-	for _, profile := range configs.Config.Profiles {
+	database.DbSetup(&config.Db)
+	for _, profile := range config.Profiles {
 		log.Printf("Gathering for profile: %s", profile)
 		sess := setupSession(profile)
 
-		for _, resource := range configs.Config.Resources {
+		for _, resource := range config.Resources {
 			resourceFunc := ResourceMap[resource]
 			wg.Add(1)
-			go resourceFunc(sess, &wg)
+			go resourceFunc(sess, &config.Rules, &wg)
 		}
 		wg.Wait()
 	}

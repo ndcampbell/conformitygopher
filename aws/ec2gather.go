@@ -18,7 +18,7 @@ type InstanceData struct {
 	BrokenRule string
 }
 
-func Ec2Gather(sess *session.Session, wg *sync.WaitGroup) []*InstanceData {
+func Ec2Gather(sess *session.Session, rules *configs.RulesConfig, wg *sync.WaitGroup) {
 	defer wg.Done()
 
 	ec2client := ec2.New(sess)
@@ -27,15 +27,15 @@ func Ec2Gather(sess *session.Session, wg *sync.WaitGroup) []*InstanceData {
 		log.Fatal("EC2 Error", err)
 	}
 	log.Println("EC2 Resources Gathered")
-	badInstances := iterateInstances(resp.Reservations)
-	return badInstances
+	badInstances := iterateInstances(resp.Reservations, rules)
+	log.Println(badInstances)
 }
 
-func iterateInstances(reservations []*ec2.Reservation) []*InstanceData {
+func iterateInstances(reservations []*ec2.Reservation, rules *configs.RulesConfig) []*InstanceData {
 	var badInstances []*InstanceData
 	for _, res := range reservations {
 		for _, instance := range res.Instances {
-			data := checkRules(instance)
+			data := checkRules(instance, rules)
 			if data != nil {
 				badInstances = append(badInstances, data)
 			}
@@ -44,9 +44,9 @@ func iterateInstances(reservations []*ec2.Reservation) []*InstanceData {
 	return badInstances
 }
 
-func checkRules(instance *ec2.Instance) *InstanceData {
+func checkRules(instance *ec2.Instance, rules *configs.RulesConfig) *InstanceData {
 	var instanceData InstanceData
-	tagRule := checkTags(instance.Tags)
+	tagRule := checkTags(instance.Tags, rules.RequiredTags)
 	if tagRule == false {
 		instanceData = buildInstanceData(instance, "Missing Required Tags")
 		return &instanceData
@@ -64,8 +64,8 @@ func buildInstanceData(instance *ec2.Instance, brokenRule string) InstanceData {
 	return instanceData
 }
 
-func checkTags(tags []*ec2.Tag) bool {
-	for _, requiredTag := range configs.Config.Rules.RequiredTags {
+func checkTags(tags []*ec2.Tag, requiredTags []string) bool {
+	for _, requiredTag := range requiredTags {
 		match := false
 		for _, instanceTag := range tags {
 			if requiredTag == *instanceTag.Key {

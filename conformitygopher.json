@@ -6,6 +6,6 @@
     "location": "./conformitygopher.db"
     },
 "rules": {
-    "required_tags": ["group"]
+    "required_tags": ["app_group", "app_name"]
     }
 }

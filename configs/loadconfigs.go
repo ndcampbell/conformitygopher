@@ -7,8 +7,8 @@ import (
 )
 
 type BaseConfig struct {
-	DbConfig
-	RulesConfig
+	Db        DbConfig
+	Rules     RulesConfig
 	Resources []string
 	Profiles  []string
 }
@@ -22,7 +22,7 @@ type RulesConfig struct {
 	RequiredTags []string `json:"required_tags"`
 }
 
-func LoadConfigs() {
+func LoadConfigs() *BaseConfig {
 
 	config := &BaseConfig{}
 	config.SetConfigDefaults()
@@ -39,14 +39,14 @@ func LoadConfigs() {
 		log.Fatal("Error with config json: ", err)
 	}
 	log.Printf("Config Loaded: %s", configpath)
+
+	return config
 }
 
 //Sets default values for config. Loading from Json will override these defaults
 func (b *BaseConfig) SetConfigDefaults() {
-	b.Profiles = []string{}
-	b.Resources = []string{}
 	b.Profiles = append(b.Profiles, "default")
 	b.Resources = append(b.Resources, "ec2")
-	b.Type = "in-memory"
-	b.Location = "./conformitygopher.db"
+	b.Db.Type = "in-memory"
+	b.Db.Location = "./conformitygopher.db"
 }
