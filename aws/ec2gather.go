@@ -74,7 +74,6 @@ func checkTags(tags []*ec2.Tag, requiredTags []string) bool {
 			}
 		}
 		if match == false {
-			log.Printf("%s Tag not found", requiredTag)
 			return false
 		}
 	}

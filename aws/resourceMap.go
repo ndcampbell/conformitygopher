@@ -17,4 +17,5 @@ easy to maintain and loop over
 var ResourceMap = map[string]func(*session.Session, *configs.RulesConfig, *sync.WaitGroup){
 	"ec2": Ec2Gather,
 	"rds": RdsGather,
+	"elb": ElbGather,
 }

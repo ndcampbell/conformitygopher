@@ -1,6 +1,6 @@
 {
-"resources": ["ec2"],
-"profiles": ["sandbox"],
+"resources": ["ec2", "elb"],
+"profiles": ["dev"],
 "db": {
     "type": "in-memory",
     "location": "./conformitygopher.db"

@@ -6,6 +6,11 @@ ConformityGopher will look for specific tags or naming conventions in AWS resour
 
 Could be expanded to include other conformity rules for keeping AWS resources uniform. 
 
+## Current Status
+
+This code is very much a work in progress. Currently it can gather info about EC2, ELB, and RDS resources
+but it does not persist the data or generate any report. 
+
 ## Config
 
 Location: `./conformitygopher.json`
