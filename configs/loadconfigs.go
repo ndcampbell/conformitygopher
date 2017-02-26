@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"log"
+	"os/user"
 )
 
 type BaseConfig struct {
@@ -27,7 +28,10 @@ func LoadConfigs() *BaseConfig {
 	config := &BaseConfig{}
 	config.SetConfigDefaults()
 
-	configpath := "./conformitygopher.json"
+	usr, _ := user.Current()
+	homedir := usr.HomeDir
+	configpath := homedir + "/conformitygopher.json"
+	log.Println(configpath)
 
 	file, err := ioutil.ReadFile(configpath)
 	if err != nil {

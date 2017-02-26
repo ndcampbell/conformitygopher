@@ -13,7 +13,7 @@ but it does not persist the data or generate any report.
 
 ## Config
 
-Location: `./conformitygopher.json`
+Location: `~/conformitygopher.json`
 Example:
 
     {

@@ -1,0 +1,13 @@
+{
+"resources": ["ec2", "elb"],
+"profiles": ["dev", "prod"],
+"db": {
+    "type": "in-memory",
+    "location": "./conformitygopher.db"
+    },
+"rules": {
+    "required_tags": ["app_group", "app_name"],
+    "empty_elb": true
+    },
+"emails": ["example@example.com", "admin@example.com"]
+}
