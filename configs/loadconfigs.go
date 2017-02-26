@@ -10,6 +10,7 @@ import (
 type BaseConfig struct {
 	Db        DbConfig
 	Rules     RulesConfig
+	Email     EmailConfig
 	Resources []string
 	Profiles  []string
 }
@@ -21,6 +22,16 @@ type DbConfig struct {
 
 type RulesConfig struct {
 	RequiredTags []string `json:"required_tags"`
+}
+
+type EmailConfig struct {
+	Enabled    bool
+	Sender     string
+	Recipients []string
+	Host       string `json:"smtp_host"`
+	Port       int    `json:"smtp_port"`
+	Username   string
+	Password   string
 }
 
 func LoadConfigs() *BaseConfig {
@@ -53,4 +64,5 @@ func (b *BaseConfig) SetConfigDefaults() {
 	b.Resources = append(b.Resources, "ec2")
 	b.Db.Type = "in-memory"
 	b.Db.Location = "./conformitygopher.db"
+	b.Email.Enabled = false
 }

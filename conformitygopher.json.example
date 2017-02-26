@@ -1,13 +1,20 @@
 {
 "resources": ["ec2", "elb"],
-"profiles": ["dev", "prod"],
+"profiles": ["dev"],
 "db": {
     "type": "in-memory",
     "location": "./conformitygopher.db"
     },
 "rules": {
-    "required_tags": ["app_group", "app_name"],
-    "empty_elb": true
+    "required_tags": ["group_name", "app_name"]
     },
-"emails": ["example@example.com", "admin@example.com"]
+"email": {
+    "enabled": true,
+    "sender": "conformity@example.com",
+    "recipients": ["admin@example.com", "test@example.com"],
+    "smtp_host": "smtp.example.com",
+    "smtp_port": 465,
+    "username": "smtpUser",
+    "password": "P@ssw0rD"
+    }
 }

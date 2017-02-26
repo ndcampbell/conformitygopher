@@ -14,19 +14,7 @@ but it does not persist the data or generate any report.
 ## Config
 
 Location: `~/conformitygopher.json`
-Example:
-
-    {
-        "resources": ["ec2", "s3" ],
-        "profiles": ["sandbox", "dev"],
-        "db": {
-            "type": "in-memory",
-            "location": "./conformitygopher.db"
-        },
-        "rules": {
-            ...
-        }
-    }
+Example: [conformitygopher.json](conformitygopher.json.example)
 
 ## Rules
 
@@ -35,7 +23,7 @@ Example:
 - Many more to come, open to any ideas
 
 ## Running
-
+`go get github.com/ndcampbell/conformitygopher`
 `go run conformitygopher/main.go`
 
 ## Database
@@ -49,3 +37,4 @@ Would like to add redis support in the future
 
 - AWS SDK: https://github.com/aws/aws-sdk-go
 - Bolt: https://github.com/boltdb/bolt
+- Gomail: https://github.com/go-gomail/gomail
