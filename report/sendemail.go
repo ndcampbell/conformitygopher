@@ -1,9 +1,9 @@
 package report
 
 import (
+	"bytes"
 	"html/template"
 	"log"
-	"os"
 	"time"
 
 	"github.com/ndcampbell/conformitygopher/configs"
@@ -22,9 +22,9 @@ func SendEmail(config *configs.EmailConfig) {
 	d := gomail.NewDialer(config.Host, config.Port, config.Username, config.Password)
 	//Sends email to everyone in config list
 	data := TemplateData{CurDate: curDate, Resource: "ec2"}
-	buildTemplate(&data)
+	doc := buildTemplate(&data)
 	for _, to := range config.Recipients {
-		m := buildMessage(config.Sender, to, subject)
+		m := buildMessage(config.Sender, to, doc, subject)
 		if err := d.DialAndSend(m); err != nil {
 			log.Fatal(err)
 		}
@@ -32,22 +32,24 @@ func SendEmail(config *configs.EmailConfig) {
 	log.Println("Report sent")
 }
 
-func buildMessage(sender string, recipient string, subject string) *gomail.Message {
+func buildMessage(sender string, recipient string, doc string, subject string) *gomail.Message {
 	m := gomail.NewMessage()
 	m.SetHeader("From", sender)
 	m.SetHeader("To", recipient)
 	m.SetHeader("Subject", subject)
-	m.SetBody("text/html", "Testing <b>Testing</b>")
+	m.SetBody("text/html", doc)
 	return m
 }
 
-func buildTemplate(data *TemplateData) {
+func buildTemplate(data *TemplateData) string {
+	var doc bytes.Buffer
 	t, err := template.ParseFiles("report/templates/emailtemplate.html")
 	if err != nil {
 		log.Fatal("error loading email template: ", err)
 	}
-	err = t.Execute(os.Stdout, data)
+	err = t.Execute(&doc, data)
 	if err != nil {
 		log.Fatal("error rendering template: ", err)
 	}
+	return doc.String()
 }
