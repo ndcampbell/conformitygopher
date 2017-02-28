@@ -2,8 +2,6 @@ package aws
 
 import (
 	"log"
-	"sync"
-	"time"
 
 	"github.com/ndcampbell/conformitygopher/configs"
 
@@ -11,15 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/ec2"
 )
 
-type InstanceData struct {
-	InstanceId string
-	Status     string
-	LaunchTime time.Time
-	BrokenRule string
-}
-
-func Ec2Gather(sess *session.Session, rules *configs.RulesConfig, wg *sync.WaitGroup) {
-	defer wg.Done()
+func Ec2Gather(sess *session.Session, rules *configs.RulesConfig, c chan []*ResourceData) {
 
 	ec2client := ec2.New(sess)
 	resp, err := ec2client.DescribeInstances(nil)
@@ -28,11 +18,11 @@ func Ec2Gather(sess *session.Session, rules *configs.RulesConfig, wg *sync.WaitG
 	}
 	log.Println("EC2 Resources Gathered")
 	badInstances := iterateInstances(resp.Reservations, rules)
-	log.Println(badInstances)
+	c <- badInstances
 }
 
-func iterateInstances(reservations []*ec2.Reservation, rules *configs.RulesConfig) []*InstanceData {
-	var badInstances []*InstanceData
+func iterateInstances(reservations []*ec2.Reservation, rules *configs.RulesConfig) []*ResourceData {
+	var badInstances []*ResourceData
 	for _, res := range reservations {
 		for _, instance := range res.Instances {
 			data := checkRules(instance, rules)
@@ -44,8 +34,8 @@ func iterateInstances(reservations []*ec2.Reservation, rules *configs.RulesConfi
 	return badInstances
 }
 
-func checkRules(instance *ec2.Instance, rules *configs.RulesConfig) *InstanceData {
-	var instanceData InstanceData
+func checkRules(instance *ec2.Instance, rules *configs.RulesConfig) *ResourceData {
+	var instanceData ResourceData
 	tagRule := checkTags(instance.Tags, rules.RequiredTags)
 	if tagRule == false {
 		instanceData = buildInstanceData(instance, "Missing Required Tags")
@@ -54,9 +44,9 @@ func checkRules(instance *ec2.Instance, rules *configs.RulesConfig) *InstanceDat
 	return nil
 }
 
-func buildInstanceData(instance *ec2.Instance, brokenRule string) InstanceData {
-	instanceData := InstanceData{
-		InstanceId: *instance.InstanceId,
+func buildInstanceData(instance *ec2.Instance, brokenRule string) ResourceData {
+	instanceData := ResourceData{
+		Id:         *instance.InstanceId,
 		Status:     *instance.State.Name,
 		LaunchTime: *instance.LaunchTime,
 		BrokenRule: brokenRule,

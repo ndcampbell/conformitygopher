@@ -27,15 +27,7 @@ Example: [conformitygopher.json](conformitygopher.json.example)
 `go get github.com/ndcampbell/conformitygopher`
 `go run conformitygopher/main.go`
 
-## Database
-
-Currently uses Bolt in-memory database: https://github.com/boltdb/bolt
-This provides an in-memory key-value store for generating the reports.
-
-Would like to add redis support in the future
-
 ## Dependencies
 
 - AWS SDK: https://github.com/aws/aws-sdk-go
-- Bolt: https://github.com/boltdb/bolt
 - Gomail: https://github.com/go-gomail/gomail

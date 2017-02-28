@@ -1,8 +1,6 @@
 package aws
 
 import (
-	"sync"
-
 	"github.com/ndcampbell/conformitygopher/configs"
 
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -14,7 +12,7 @@ JSON configs. As long as all gathers have the same function interface, this is
 easy to maintain and loop over
 */
 
-var ResourceMap = map[string]func(*session.Session, *configs.RulesConfig, *sync.WaitGroup){
+var ResourceMap = map[string]func(*session.Session, *configs.RulesConfig, chan []*ResourceData){
 	"ec2": Ec2Gather,
 	"rds": RdsGather,
 	"elb": ElbGather,

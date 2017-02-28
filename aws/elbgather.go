@@ -2,7 +2,6 @@ package aws
 
 import (
 	"log"
-	"sync"
 	"time"
 
 	"github.com/ndcampbell/conformitygopher/configs"
@@ -17,8 +16,8 @@ type ElbData struct {
 	BrokenRule       string
 }
 
-func ElbGather(sess *session.Session, rules *configs.RulesConfig, wg *sync.WaitGroup) {
-	defer wg.Done()
+func ElbGather(sess *session.Session, rules *configs.RulesConfig, c chan []*ResourceData) {
+	log.Println(c) // placeholder
 
 	elbclient := elb.New(sess)
 	resp, err := elbclient.DescribeLoadBalancers(nil)

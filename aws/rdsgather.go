@@ -2,7 +2,6 @@ package aws
 
 import (
 	"log"
-	"sync"
 
 	"github.com/ndcampbell/conformitygopher/configs"
 
@@ -10,10 +9,12 @@ import (
 	"github.com/aws/aws-sdk-go/service/rds"
 )
 
-func RdsGather(sess *session.Session, rules *configs.RulesConfig, wg *sync.WaitGroup) {
-	defer wg.Done()
+func RdsGather(sess *session.Session, rules *configs.RulesConfig, c chan []*ResourceData) {
 
 	rdsclient := rds.New(sess)
+
+	log.Println(c) //placeholder
+
 	_, err := rdsclient.DescribeDBInstances(nil)
 	if err != nil {
 		log.Fatal("RDS Error", err)

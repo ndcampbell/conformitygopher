@@ -2,10 +2,8 @@ package aws
 
 import (
 	"log"
-	"sync"
 
 	"github.com/ndcampbell/conformitygopher/configs"
-	"github.com/ndcampbell/conformitygopher/database"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -24,18 +22,17 @@ func setupSession(profile string) *session.Session {
 }
 
 func RunAll(config *configs.BaseConfig) {
-	var wg sync.WaitGroup
+	c := make(chan []*ResourceData)
 
-	database.DbSetup(&config.Db)
 	for _, profile := range config.Profiles {
 		log.Printf("Gathering for profile: %s", profile)
 		sess := setupSession(profile)
 
 		for _, resource := range config.Resources {
 			resourceFunc := ResourceMap[resource]
-			wg.Add(1)
-			go resourceFunc(sess, &config.Rules, &wg)
+			go resourceFunc(sess, &config.Rules, c)
 		}
-		wg.Wait()
+		test := <-c
+		log.Println(test)
 	}
 }
