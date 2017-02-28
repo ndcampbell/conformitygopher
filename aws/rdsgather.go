@@ -9,15 +9,14 @@ import (
 	"github.com/aws/aws-sdk-go/service/rds"
 )
 
-func RdsGather(sess *session.Session, rules *configs.RulesConfig, c chan Resource) {
+func RdsGather(sess *session.Session, rules *configs.RulesConfig) Resource {
 
 	rdsclient := rds.New(sess)
-
-	log.Println(c) //placeholder
 
 	_, err := rdsclient.DescribeDBInstances(nil)
 	if err != nil {
 		log.Fatal("RDS Error", err)
 	}
 	log.Println("RDS Resources Gathered")
+	return Resource{}
 }

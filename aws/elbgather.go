@@ -2,7 +2,6 @@ package aws
 
 import (
 	"log"
-	"time"
 
 	"github.com/ndcampbell/conformitygopher/configs"
 
@@ -10,14 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/elb"
 )
 
-type ElbData struct {
-	LoadBalancerName string
-	LaunchTime       time.Time
-	BrokenRule       string
-}
-
-func ElbGather(sess *session.Session, rules *configs.RulesConfig, c chan Resource) {
-	log.Println(c) // placeholder
+func ElbGather(sess *session.Session, rules *configs.RulesConfig) Resource {
 
 	elbclient := elb.New(sess)
 	resp, err := elbclient.DescribeLoadBalancers(nil)
@@ -26,6 +18,7 @@ func ElbGather(sess *session.Session, rules *configs.RulesConfig, c chan Resourc
 	}
 	log.Println("ELB Resources Gathered")
 	iterateElbs(resp.LoadBalancerDescriptions, rules)
+	return Resource{}
 }
 
 func iterateElbs(elbs []*elb.LoadBalancerDescription, rules *configs.RulesConfig) {
