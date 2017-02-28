@@ -21,8 +21,9 @@ func setupSession(profile string) *session.Session {
 	return sess
 }
 
-func RunAll(config *configs.BaseConfig) {
-	c := make(chan []*ResourceData)
+func RunAll(config *configs.BaseConfig) *[]Resource {
+	c := make(chan Resource)
+	var badResources []Resource
 
 	for _, profile := range config.Profiles {
 		log.Printf("Gathering for profile: %s", profile)
@@ -32,7 +33,10 @@ func RunAll(config *configs.BaseConfig) {
 			resourceFunc := ResourceMap[resource]
 			go resourceFunc(sess, &config.Rules, c)
 		}
-		test := <-c
-		log.Println(test)
+		for resource := range c {
+			resource.Account = profile
+			badResources = append(badResources, resource)
+		}
 	}
+	return &badResources
 }

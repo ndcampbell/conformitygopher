@@ -9,7 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/ec2"
 )
 
-func Ec2Gather(sess *session.Session, rules *configs.RulesConfig, c chan []*ResourceData) {
+func Ec2Gather(sess *session.Session, rules *configs.RulesConfig, c chan Resource) {
 
 	ec2client := ec2.New(sess)
 	resp, err := ec2client.DescribeInstances(nil)
@@ -17,8 +17,10 @@ func Ec2Gather(sess *session.Session, rules *configs.RulesConfig, c chan []*Reso
 		log.Fatal("EC2 Error", err)
 	}
 	log.Println("EC2 Resources Gathered")
-	badInstances := iterateInstances(resp.Reservations, rules)
-	c <- badInstances
+	resource := Resource{Type: "Ec2"}
+	resource.Data = iterateInstances(resp.Reservations, rules)
+	c <- resource
+	close(c)
 }
 
 func iterateInstances(reservations []*ec2.Reservation, rules *configs.RulesConfig) []*ResourceData {

@@ -16,7 +16,7 @@ type ElbData struct {
 	BrokenRule       string
 }
 
-func ElbGather(sess *session.Session, rules *configs.RulesConfig, c chan []*ResourceData) {
+func ElbGather(sess *session.Session, rules *configs.RulesConfig, c chan Resource) {
 	log.Println(c) // placeholder
 
 	elbclient := elb.New(sess)

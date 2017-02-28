@@ -11,7 +11,8 @@ import (
 func main() {
 	log.Println("Starting ConformityGopher!")
 	config := configs.LoadConfigs()
-	aws.RunAll(config)
+	badResources := aws.RunAll(config)
+	log.Println(badResources)
 	if config.Email.Enabled {
 		report.SendEmail(&config.Email)
 	}

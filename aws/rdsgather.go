@@ -9,7 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/rds"
 )
 
-func RdsGather(sess *session.Session, rules *configs.RulesConfig, c chan []*ResourceData) {
+func RdsGather(sess *session.Session, rules *configs.RulesConfig, c chan Resource) {
 
 	rdsclient := rds.New(sess)
 
