@@ -1,0 +1,9 @@
+<center><h1>ConformityGopher Report - {{ .CurDate }}</h1></center>
+<br />
+{{ range $i, $item := .BadResources }}
+<h2>{{ $item.Type }} - {{$item.Account }}</h2>
+    {{ range $j, $bad := $item.Data }}
+    <p><b>Resource Id: </b>{{ $bad.Id }} <b>Resource Status: </b> {{ $bad.Status }} <b>Broken Rule: </b>{{ $bad.BrokenRule }}</p>
+    {{ end }}
+{{ end }}
+

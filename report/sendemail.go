@@ -6,23 +6,25 @@ import (
 	"log"
 	"time"
 
+	"github.com/ndcampbell/conformitygopher/aws"
 	"github.com/ndcampbell/conformitygopher/configs"
 
 	"gopkg.in/gomail.v2"
 )
 
 type TemplateData struct {
-	CurDate  string
-	Resource string
+	CurDate      string
+	BadResources *[]aws.Resource
 }
 
-func SendEmail(config *configs.EmailConfig) {
+func SendEmail(config *configs.EmailConfig, badResources *[]aws.Resource) {
 	log.Println("Generating Report")
+	log.Println(badResources)
 	curDate := time.Now().Format("2006-01-02")
 	subject := "ConformityGopher Report - " + curDate
 	d := gomail.NewDialer(config.Host, config.Port, config.Username, config.Password)
 	//Sends email to everyone in config list
-	data := TemplateData{CurDate: curDate, Resource: "ec2"}
+	data := TemplateData{CurDate: curDate, BadResources: badResources}
 	doc := buildTemplate(&data)
 	for _, to := range config.Recipients {
 		m := buildMessage(config.Sender, to, doc, subject)
