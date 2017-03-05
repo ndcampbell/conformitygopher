@@ -19,7 +19,6 @@ type TemplateData struct {
 
 func SendEmail(config *configs.EmailConfig, badResources *[]aws.Resource) {
 	log.Println("Generating Report")
-	log.Println(badResources)
 	curDate := time.Now().Format("2006-01-02")
 	subject := "ConformityGopher Report - " + curDate
 	d := gomail.NewDialer(config.Host, config.Port, config.Username, config.Password)
