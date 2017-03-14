@@ -26,7 +26,7 @@ func iterateInstances(reservations []*ec2.Reservation, rules *configs.RulesConfi
 	var badInstances []*ResourceData
 	for _, res := range reservations {
 		for _, instance := range res.Instances {
-			data := checkRules(instance, rules)
+			data := checkInstanceRules(instance, rules)
 			if data != nil {
 				badInstances = append(badInstances, data)
 			}
@@ -35,7 +35,7 @@ func iterateInstances(reservations []*ec2.Reservation, rules *configs.RulesConfi
 	return badInstances
 }
 
-func checkRules(instance *ec2.Instance, rules *configs.RulesConfig) *ResourceData {
+func checkInstanceRules(instance *ec2.Instance, rules *configs.RulesConfig) *ResourceData {
 	var instanceData ResourceData
 	tagRule := checkTags(instance.Tags, rules.RequiredTags)
 	if tagRule == false {

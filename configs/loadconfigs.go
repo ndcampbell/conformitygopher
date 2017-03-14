@@ -22,6 +22,7 @@ type DbConfig struct {
 
 type RulesConfig struct {
 	RequiredTags []string `json:"required_tags"`
+	EmptyElb     bool     `json:"empty_elb"`
 }
 
 type EmailConfig struct {
