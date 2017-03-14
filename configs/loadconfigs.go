@@ -66,4 +66,5 @@ func (b *BaseConfig) SetConfigDefaults() {
 	b.Db.Type = "in-memory"
 	b.Db.Location = "./conformitygopher.db"
 	b.Email.Enabled = false
+	b.Rules.EmptyElb = false
 }

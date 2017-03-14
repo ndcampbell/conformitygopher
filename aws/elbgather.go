@@ -25,7 +25,10 @@ func ElbGather(sess *session.Session, rules *configs.RulesConfig) Resource {
 func iterateElbs(elbs []*elb.LoadBalancerDescription, rules *configs.RulesConfig) []*ResourceData {
 	var badElbs []*ResourceData
 	for _, lb := range elbs {
-		checkLbRules(lb, rules)
+		data := checkLbRules(lb, rules)
+		if data != nil {
+			badElbs = append(badElbs, data)
+		}
 	}
 	return badElbs
 }
@@ -33,7 +36,7 @@ func iterateElbs(elbs []*elb.LoadBalancerDescription, rules *configs.RulesConfig
 func checkLbRules(lb *elb.LoadBalancerDescription, rules *configs.RulesConfig) *ResourceData {
 	var lbData ResourceData
 	if rules.EmptyElb == true {
-		if len(lb.Instances) == 0 {
+		if lb.Instances == nil {
 			lbData = buildLbData(lb, "Empty Load Balancer")
 			return &lbData
 		}
